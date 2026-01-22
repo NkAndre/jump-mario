@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="shortcut icon" href="./assets/icone-mario1.png" type="image/x-icon">
+    
+    <script src="./js/script.js" defer></script>
+    
+    <link rel="manifest" href="manifest.json">
+    <title>Mario Game</title>
+</head>
+<body>
+    <div class="game-board">
+        <div class="score">0</div>
+        <div class="high-score">HI 0</div> 
+        <button class="restart-button">Jogar Novamente</button>
+        
+        <img src="./assets/clouds.png" class="clouds" alt="">
+        <img src="./assets/mario.gif" class="mario" alt="">
+        <img src="./assets/pipe.png" class="pipe" alt="">
+        <div class="floor"></div>
+    </div>
+
+    <footer>
+        <a href="https://github.com/NkAndre" target="_blank" rel="noopener noreferrer" class="social-link">
+            <span class="title">NkAndre -</span>
+            <img src="./assets/git.png" class="img-git" alt="GitHub">
+        </a>
+        <a href="https://www.linkedin.com/in/andre-santosdev/" target="_blank" rel="noopener noreferrer" class="social-link">
+            <span class="title">André Santos -</span>
+            <img src="./assets/likedin.png" class="img-git" alt="LinkedIn">
+        </a>
+    </footer>
+
+    <script>
+      
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('SW registrado com sucesso!', reg))
+                .catch(err => console.log('Falha ao registrar SW:', err));
+            });
+        }
+    </script>
+</body>
+</html>
