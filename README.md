@@ -1,4 +1,4 @@
-## 🍄 SUPER MARIO GAME -  👉 **[Visualize meu portfólio aqui](https://nkandre.github.io/jump-mario/)**
+## 🍄 SUPER MARIO GAME -  👉 **[Jogue o jump mario](https://nkandre.github.io/jump-mario/)**
 
 Este é um projeto de um jogo web inspirado no clássico Super Mario. O objetivo é pular os obstáculos (canos) e alcançar a maior pontuação possível!
 
