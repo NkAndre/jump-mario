@@ -55,16 +55,15 @@ const Actions = {
     },
 
     updateDifficulty() {
-        if (Game.gameSpeed > 0.8) {
-            Game.gameSpeed -= 0.05;
+        if (Game.score % 5 === 0 && Game.gameSpeed > 0.8) {
+            Game.gameSpeed -= 0.1;
             UI.pipe.style.animationDuration = `${Game.gameSpeed}s`;
         }
     },
-
     checkCollision(marioBottom, pipeLeft) {
         const marioWidth = UI.mario.offsetWidth;
         const pipeHeight = UI.pipe.offsetHeight;
-        
+
         const collisionWidth = marioWidth * 0.5;
         const collisionHeight = pipeHeight * 0.6;
 
@@ -83,11 +82,11 @@ Game.loopInterval = setInterval(() => {
     if (Actions.checkCollision(marioPosition, pipePosition)) {
         Game.isGameOver = true;
         UI.applyGameOver(marioPosition, pipePosition, UI.mario.offsetWidth);
-        
+
         if (Game.score > Game.highScore) {
             localStorage.setItem('marioHighScore', Game.score);
         }
-        
+
         clearInterval(Game.loopInterval);
         return;
     }
