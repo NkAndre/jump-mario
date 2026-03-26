@@ -1,4 +1,4 @@
-// --- 1. ESTADO DO JOGO (Variáveis de controle) ---
+// --- 1. ESTADO DO JOGO ---
 const Game = {
     score: 0,
     highScore: localStorage.getItem('marioHighScore') || 0,
@@ -8,7 +8,7 @@ const Game = {
     loopInterval: null
 };
 
-// --- 2. ELEMENTOS DA UI (Seletores e atualizações visuais) ---
+// --- 2. ELEMENTOS DA UI ---
 const UI = {
     mario: document.querySelector('.mario'),
     pipe: document.querySelector('.pipe'),
@@ -42,28 +42,41 @@ const UI = {
     }
 };
 
+// --- 2.1. EFEITOS DE ÁUDIO ---
+const AudioFX = {
+    jump: new Audio('./assets/jump.mp3'), 
+    gameOver: new Audio('./assets/game-over.mp3'),
+
+    play(sound) {
+        sound.currentTime = 0; 
+        sound.play().catch(e => console.warn("Áudio aguardando interação."));
+    }
+};
+
 // --- 3. LÓGICA DE MOVIMENTO E REGRAS ---
 const Actions = {
     jump() {
         if (Game.isGameOver) return;
 
+        AudioFX.play(AudioFX.jump); // Toca o som ao pularaa
+
         UI.mario.classList.remove('jump');
-        void UI.mario.offsetWidth; // Force reflow aq
+        void UI.mario.offsetWidth; 
         UI.mario.classList.add('jump');
 
         setTimeout(() => UI.mario.classList.remove('jump'), 500);
     },
 
     updateDifficulty() {
-        if (Game.score % 5 === 0 && Game.gameSpeed > 0.8) {
+        if (Game.score > 0 && Game.score % 5 === 0 && Game.gameSpeed > 0.8) {
             Game.gameSpeed -= 0.1;
             UI.pipe.style.animationDuration = `${Game.gameSpeed}s`;
         }
     },
+
     checkCollision(marioBottom, pipeLeft) {
         const marioWidth = UI.mario.offsetWidth;
         const pipeHeight = UI.pipe.offsetHeight;
-
         const collisionWidth = marioWidth * 0.5;
         const collisionHeight = pipeHeight * 0.6;
 
@@ -81,6 +94,9 @@ Game.loopInterval = setInterval(() => {
     // Lógica de Colisão
     if (Actions.checkCollision(marioPosition, pipePosition)) {
         Game.isGameOver = true;
+        
+        AudioFX.play(AudioFX.gameOver); // Toca som de Game Over
+        
         UI.applyGameOver(marioPosition, pipePosition, UI.mario.offsetWidth);
 
         if (Game.score > Game.highScore) {
