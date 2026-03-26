@@ -1,110 +1,119 @@
-const mario = document.querySelector('.mario');
-const pipe = document.querySelector('.pipe');
-const scoreElement = document.querySelector('.score');
-const restartButton = document.querySelector('.restart-button');
-const highScoreElement = document.querySelector('.high-score');
+// --- 1. ESTADO DO JOGO (Variáveis de controle) ---
+const Game = {
+    score: 0,
+    highScore: localStorage.getItem('marioHighScore') || 0,
+    isGameOver: false,
+    gameSpeed: 2.0,
+    pipePassed: false,
+    loopInterval: null
+};
 
-let score = 0;
-let pipePassed = false;
-let isGameOver = false;
-let gameSpeed = 2.0;
+// --- 2. ELEMENTOS DA UI (Seletores e atualizações visuais) ---
+const UI = {
+    mario: document.querySelector('.mario'),
+    pipe: document.querySelector('.pipe'),
+    score: document.querySelector('.score'),
+    highScore: document.querySelector('.high-score'),
+    restartBtn: document.querySelector('.restart-button'),
 
-// Carrega o recorde da memória do navegador
-let highScore = localStorage.getItem('marioHighScore') || 0;
-highScoreElement.innerHTML = `HI ${highScore}`;
+    init() {
+        this.highScore.innerHTML = `HI ${Game.highScore}`;
+    },
 
-const jump = () => {
-    if (isGameOver) return;
-
-    mario.classList.remove('jump');
-    void mario.offsetWidth; // Reset de animação
-    mario.classList.add('jump');
-    
-    setTimeout(() => {
-        mario.classList.remove('jump');
-    }, 500);
-}
-
-const updateDifficulty = () => {
-    // Reduz o tempo da animação (mínimo 0.8s)
-    if (gameSpeed > 0.8) {
-        gameSpeed -= 0.05;
-        pipe.style.animationDuration = `${gameSpeed}s`;
-    }
-}
-
-const loop = setInterval(() => {
-    const pipePosition = pipe.offsetLeft;
-    const marioPosition = +window.getComputedStyle(mario).bottom.replace('px', '');
-    
-    const marioWidth = mario.offsetWidth;
-    const pipeHeight = pipe.offsetHeight;
-
-    // LÓGICA DE PONTUAÇÃO
-    if (pipePosition < 0 && !pipePassed && !isGameOver) {
-        score++;
-        scoreElement.innerHTML = score;
-        pipePassed = true;
-        updateDifficulty();
-
-        // Se bater o recorde enquanto joga, faz o HI piscar
-        if (score > highScore) {
-            highScoreElement.classList.add('new-record');
-            highScoreElement.innerHTML = `HI ${score}`;
+    updateScore(newScore) {
+        this.score.innerHTML = newScore;
+        if (newScore > Game.highScore) {
+            this.highScore.classList.add('new-record');
+            this.highScore.innerHTML = `HI ${newScore}`;
         }
+    },
+
+    applyGameOver(marioPos, pipePos, marioWidth) {
+        this.pipe.style.animation = 'none';
+        this.pipe.style.left = `${pipePos}px`;
+
+        this.mario.style.animation = 'none';
+        this.mario.style.bottom = `${marioPos}px`;
+        this.mario.src = './assests/game-over.png';
+        this.mario.style.width = (marioWidth * 0.6) + 'px';
+        this.mario.style.marginLeft = (marioWidth * 0.3) + 'px';
+
+        this.restartBtn.style.display = 'block';
     }
+};
 
-    if (pipePosition > 100) { 
-        pipePassed = false;
-    }
+// --- 3. LÓGICA DE MOVIMENTO E REGRAS ---
+const Actions = {
+    jump() {
+        if (Game.isGameOver) return;
 
-    // LÓGICA DE COLISÃO
-    const collisionWidth = marioWidth * 0.5; 
-    const collisionHeight = pipeHeight * 0.6;
+        UI.mario.classList.remove('jump');
+        void UI.mario.offsetWidth; // Force reflow aq
+        UI.mario.classList.add('jump');
 
-    if (pipePosition <= collisionWidth && pipePosition > 0 && marioPosition < collisionHeight) {
-        isGameOver = true;
+        setTimeout(() => UI.mario.classList.remove('jump'), 500);
+    },
+
+    updateDifficulty() {
+        if (Game.gameSpeed > 0.8) {
+            Game.gameSpeed -= 0.05;
+            UI.pipe.style.animationDuration = `${Game.gameSpeed}s`;
+        }
+    },
+
+    checkCollision(marioBottom, pipeLeft) {
+        const marioWidth = UI.mario.offsetWidth;
+        const pipeHeight = UI.pipe.offsetHeight;
         
-        pipe.style.animation = 'none';
-        pipe.style.left = `${pipePosition}px`;
+        const collisionWidth = marioWidth * 0.5;
+        const collisionHeight = pipeHeight * 0.6;
 
-        mario.style.animation = 'none';
-        mario.style.bottom = `${marioPosition}px`;
+        return pipeLeft <= collisionWidth && pipeLeft > 0 && marioBottom < collisionHeight;
+    }
+};
 
-        mario.src = './assests/game-over.png';
-        mario.style.width = (marioWidth * 0.6) + 'px';
-        mario.style.marginLeft = (marioWidth * 0.3) + 'px';
+// --- 4. O LOOP PRINCIPAL ---
+UI.init();
 
-        // SALVAR RECORDE NA MEMÓRIA
-        if (score > highScore) {
-            highScore = score;
-            localStorage.setItem('marioHighScore', highScore);
+Game.loopInterval = setInterval(() => {
+    const pipePosition = UI.pipe.offsetLeft;
+    const marioPosition = +window.getComputedStyle(UI.mario).bottom.replace('px', '');
+
+    // Lógica de Colisão
+    if (Actions.checkCollision(marioPosition, pipePosition)) {
+        Game.isGameOver = true;
+        UI.applyGameOver(marioPosition, pipePosition, UI.mario.offsetWidth);
+        
+        if (Game.score > Game.highScore) {
+            localStorage.setItem('marioHighScore', Game.score);
         }
+        
+        clearInterval(Game.loopInterval);
+        return;
+    }
 
-        restartButton.style.display = 'block'; 
-        clearInterval(loop);
+    // Lógica de Pontuação
+    if (pipePosition < 0 && !Game.pipePassed && !Game.isGameOver) {
+        Game.score++;
+        UI.updateScore(Game.score);
+        Game.pipePassed = true;
+        Actions.updateDifficulty();
+    }
+
+    if (pipePosition > 100) {
+        Game.pipePassed = false;
     }
 }, 10);
 
-// RESTART
-restartButton.addEventListener('click', () => {
-    location.reload();
+// --- 5. EVENT LISTENERS ---
+document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space' || e.code === 'ArrowUp') Actions.jump();
 });
 
-// CONTROLES
-document.addEventListener('keydown', (e) => {
-    if (e.code === 'Space' || e.code === 'ArrowUp') jump();
-});
+UI.restartBtn.addEventListener('click', () => location.reload());
 
 window.addEventListener('pointerdown', (e) => {
-    // Não pula se clicar nos links ou no botão de restart
     if (!e.target.closest('footer') && !e.target.closest('.restart-button')) {
-        jump();
+        Actions.jump();
     }
-}, { passive: false });
-
-document.addEventListener('touchstart', (e) => {
-    if (e.target.tagName !== 'A' && e.target !== restartButton) {
-        e.preventDefault();
-    }
-}, { passive: false });
+});
