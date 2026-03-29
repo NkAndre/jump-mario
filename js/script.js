@@ -34,7 +34,7 @@ const UI = {
 
         this.mario.style.animation = 'none';
         this.mario.style.bottom = `${marioPos}px`;
-        this.mario.src = './assets/game-over.png'; // Verifique se o caminho está certo (corrigi 'assests')
+        this.mario.src = './assets/game-over.png'; 
         this.mario.style.width = (marioWidth * 0.6) + 'px';
         this.mario.style.marginLeft = (marioWidth * 0.3) + 'px';
 
@@ -63,14 +63,16 @@ const Actions = {
         setTimeout(() => UI.mario.classList.remove('jump'), 500);
     },
 
-    updateDifficulty() {
-        // Reduz 0.1s a cada 5 pontos, limite mínimo de 1.0s para ser jogável
-        if (Game.score > 0 && Game.score % 5 === 0 && Game.gameSpeed > 1.0) {
-            Game.gameSpeed -= 0.1;
+  updateDifficulty() {
+        
+        if (Game.score > 0 && Game.score % 5 === 0 && Game.gameSpeed > 1.2) {
+            Game.gameSpeed -= 0.05; 
             UI.pipe.style.animationDuration = `${Game.gameSpeed}s`;
+            
+            
+            console.log(`Dificuldade aumentada! Velocidade atual: ${Game.gameSpeed.toFixed(2)}s`);
         }
     },
-
     checkCollision(marioBottom, pipeLeft) {
         const marioWidth = UI.mario.offsetWidth;
         const pipeHeight = UI.pipe.offsetHeight;
@@ -98,11 +100,11 @@ Game.loopInterval = setInterval(() => {
         return;
     }
 
-    // Lógica de Pontuação Corrigida
+    // Lógica de Pontuação Crrd
     if (pipePosition < 0 && !Game.pipePassed && !Game.isGameOver) {
         Game.score++;
         UI.updateScore(Game.score);
-        Actions.updateDifficulty(); // Chama a dificuldade apenas 1 vez por cano
+        Actions.updateDifficulty(); 
         Game.pipePassed = true;
     }
 
