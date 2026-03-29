@@ -107,7 +107,7 @@ Game.loopInterval = setInterval(() => {
         return;
     }
 
-    // Lógica de Pontuação
+    // Lógica de Pontuaçãoo
     if (pipePosition < 0 && !Game.pipePassed && !Game.isGameOver) {
         Game.score++;
         UI.updateScore(Game.score);

@@ -1,143 +1,167 @@
-*{
-   margin: 0;
+/*RESET GLOBAL*/
+
+* {
+    margin: 0;
     padding: 0;
     box-sizing: border-box;
-    /* Impede zoom e ações automáticas que atrasam o clique */
-    touch-action: manipulation; 
+
+    touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
-   
+
 }
+
 .game-board {
     touch-action: none;
     width: 100%;
     height: 70vh;
     max-height: 500px;
-    border-bottom: 14px solid rgb(35,160,35);
+    border-bottom: 14px solid rgb(35, 160, 35);
     margin: 0 auto;
     position: relative;
     overflow: hidden;
     background: linear-gradient(#87CEEB, #E0F6FF);
 }
-.pipe{
+
+.pipe {
     position: absolute;
     bottom: 0;
     width: 80px;
- 
+
     animation: pipe-animation 2s infinite linear;
 
 }
 
-.mario{
+.mario {
     width: 180px;
     position: absolute;
     bottom: 0;
-    
+
 }
-.jump{
+
+.jump {
     animation: jump 500ms 1 linear;
 }
+
 @keyframes pipe-animation {
     from {
         right: -80px;
 
     }
+
     to {
         right: 100%;
 
     }
-    
+
 }
+
 .jump {
-    
-    animation: jump 500ms 1 linear; 
+
+    animation: jump 500ms 1 linear;
 }
 
 @keyframes jump {
-    0% { bottom: 0; }
-    30% { bottom: 180px; } /* Sobe muito rápido (dá a sensação de força) */
-    70% { bottom: 180px; } /* Fica um tempo no ar (ajuda a não precisar de timing perfeitooo) */
-    100% { bottom: 0; }
+    0% {
+        bottom: 0;
+    }
+
+    30% {
+        bottom: 180px;
+    }
+
+    70% {
+        bottom: 180px;
+    }
+
+    100% {
+        bottom: 0;
+    }
 }
-.clouds{
+
+.clouds {
     width: 550px;
     position: absolute;
     animation: clouds-animation 20s infinite linear;
 }
 
 @keyframes clouds-animation {
-    from{
+    from {
         right: -550px;
     }
-    to{
-        right:100%;
+
+    to {
+        right: 100%;
     }
 }
+
 footer {
     display: flex;
-    flex-direction: column; /* Coloca um link embaixo do outro */
-    align-items: center;    /* Centraliza horizontalmente */
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
-    gap: 15px;             /* Espaço entre os dois links */
+    gap: 15px;
     padding: 20px 0;
     width: 100%;
 }
 
 .social-link {
     display: flex;
-    align-items: center;    /* Alinha o texto com o meio da imagem */
-    text-decoration: none;  /* Remove o sublinhado azul do link */
-    color: #27058c;           /* Cor do texto */
+    align-items: center;
+    text-decoration: none;
+    color: #27058c;
     font-weight: bold;
     transition: transform 0.2s;
-     background-color: #ffffff; /* Fundo branco para o botão */
-    color: #cf0dff;               /* Cor do texto */
+    background-color: #ffffff;
+    color: #cf0dff;
     padding: 10px 20px;
-    border-radius: 8px;        /* Bordas arredondadas */
-    width: 250px;              /* Largura fixa para ficarem iguais */
-    
-    /* Borda e Sombra para dar profundidade */
-    border: 3px solid #333; 
-    box-shadow: 4px 4px 0px #000; /* Sombra sólida estilo pixel art */
-    
+    border-radius: 8px;
+    width: 250px;
+
+
+    border: 3px solid #333;
+    box-shadow: 4px 4px 0px #000;
+
     font-weight: bold;
     transition: all 0.2s;
 }
 
 
 .img-git {
-    height: 40px;           /* Tamanho dos ícones */
-    margin-left: 10px;      /* Espaço entre o texto e a imagem */
+    height: 40px;
+    margin-left: 10px;
 }
-.title{
+
+.title {
     font-weight: bold;
     font-size: larger;
 }
+
 .social-link:hover {
-    transform: translate(-2px, -2px); /* Move levemente */
-    box-shadow: 6px 6px 0px #000;    /* Aumenta a sombra */
-    background-color: #e0f6ff;       /* Muda a cor de fundo (azul claro do céu) */
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px #000;
+    background-color: #e0f6ff;
 }
 
 .score {
     position: absolute;
     top: 20px;
     right: 20px;
-    font-family: 'Courier New', Courier, monospace; 
+    font-family: 'Courier New', Courier, monospace;
     font-size: 50px;
     font-weight: bold;
     color: white;
-    text-shadow: 3px 3px 0px #000; /* Sombra para destacar */
-    z-index: 10; /* Garante que fique na frente das nuvens */
+    text-shadow: 3px 3px 0px #000;
+    z-index: 10;
 }
 
-/* Ajuste do tamanho do Mario e Cano para telas menores */
+
 @media (max-width: 600px) {
     .mario {
-        width: 100px; /* Mario  fica menor no celular */
+        width: 100px;
     }
-    
+
     .pipe {
-        width: 50px; /* Cano mais fino no celular */
+        width: 50px;
     }
 
     .score {
@@ -147,26 +171,30 @@ footer {
 }
 
 @media (max-width: 600px) {
-    /* Impede o atraso de 300ms do clique no celular */
-    canvas, img, div {
+
+    canvas,
+    img,
+    div {
         touch-action: manipulation;
     }
 }
 
 .jump {
-    
-    animation: jump 500ms 1 ease-in-out; 
+
+    animation: jump 500ms 1 ease-in-out;
 }
 
-/*  isso éee para o celular ignorar o delay de clique */
-canvas, img, div, body {
+canvas,
+img,
+div,
+body {
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
 }
 
 .restart-button {
 
-    display: none; /* Ele começa escondido e o JS vai mudar para 'block' */
+    display: none;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -179,12 +207,12 @@ canvas, img, div, body {
     border: 4px solid #000;
     box-shadow: 5px 5px 0px #000;
     cursor: pointer;
-    z-index: 100; /* Valor alto para ficar na frente de tudo */
+    z-index: 100;
     text-transform: uppercase;
     border-radius: 8px;
 }
 
-/* Efeito de clique no botão */
+
 .restart-button:active {
     box-shadow: 2px 2px 0px #000;
     transform: translate(-48%, -48%);
@@ -195,6 +223,7 @@ canvas, img, div, body {
     box-shadow: 2px 2px 0px #000;
     transform: translate(-48%, -48%);
 }
+
 .high-score {
     position: absolute;
     top: 80px;
@@ -213,8 +242,15 @@ canvas, img, div, body {
 }
 
 @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.3;
+    }
 }
 
 @media (max-width: 600px) {
