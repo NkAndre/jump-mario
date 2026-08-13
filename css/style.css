@@ -115,9 +115,9 @@ footer {
     align-items: center;
     justify-content: center;
     gap: 15px;
-    padding: 60px 0; /* Aumentei um pouco para dar mais destaque à terra */
+    padding: 60px 0;
     width: 100%;
-    background-color: #73462c; /* Mantém a cor de terra */
+    background-color: #73462c; 
 }
 
 
@@ -239,6 +239,27 @@ body {
 .restart-button:active {
     box-shadow: 2px 2px 0px #000;
     transform: translate(-48%, -48%);
+}
+
+.share-button {
+
+    display: none;
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 15px 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    background-color: #45dae4;
+    border: 4px solid #000;
+    box-shadow: 5px 5px 0px #000;
+    cursor: pointer;
+    z-index: 100;
+    text-transform: uppercase;
+    border-radius: 8px;
+
 }
 
 .high-score {

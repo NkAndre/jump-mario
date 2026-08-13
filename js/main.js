@@ -49,3 +49,7 @@ window.addEventListener('pointerdown', (e) => {
         Actions.jump();
     }
 });
+
+UI.shareBtn.addEventListener('click', () => {
+    UI.shareScore(Game.score);
+});
